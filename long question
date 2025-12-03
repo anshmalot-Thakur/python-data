@@ -1,0 +1,103 @@
+# ---------- Helper Functions ----------
+def input_int(prompt):
+    while True:
+        try:
+            n = int(input(prompt))
+            if n >= 1:
+                return n
+        except:
+            pass
+        print("Enter a number ≥ 1.")
+
+def input_something(prompt):
+    while True:
+        s = input(prompt).strip()
+        if s:
+            return s
+        print("Please enter something.")
+
+# ---------- Movie Data ----------
+movies = [
+    {"name": "Forrest Gump", "year": 1994, "duration": 142, "genres": ["Drama", "Romance"]},
+    {"name": "Avengers: Endgame", "year": 2019, "duration": 181, "genres": ["Action","Adventure","Drama"]},
+    {"name": "Back to the Future", "year": 1985, "duration": 114, "genres": ["Adventure","Comedy","Sci-Fi"]}
+]
+
+print("Welcome to Movie Admin!")
+
+# ---------- Main Loop ----------
+while True:
+    choice = input("Choose [a]dd, [l]ist, [s]earch, [v]iew, [d]elete or [q]uit: ").lower()
+
+    # ADD
+    if choice == "a":
+        name = input_something("Movie name: ")
+        year = input_int("Release year: ")
+        duration = input_int("Duration (minutes): ")
+
+        genres = []
+        while not genres:
+            g = input_something("Enter genres (comma separated): ")
+            genres = [x.strip() for x in g.split(",") if x.strip()]
+
+        movies.append({"name": name, "year": year, "duration": duration, "genres": genres})
+        print("Movie added!")
+
+    # LIST
+    elif choice == "l":
+        if not movies:
+            print("No movies saved.")
+        else:
+            for i, m in enumerate(movies, 1):
+                print(f"{i}) {m['name']} ({m['year']})")
+
+    # SEARCH
+    elif choice == "s":
+        if not movies:
+            print("No movies saved.")
+            continue
+        term = input_something("Search term: ").lower()
+        for i, m in enumerate(movies, 1):
+            if term in m["name"].lower():
+                print(f"{i}) {m['name']} ({m['year']})")
+
+    # VIEW
+    elif choice == "v":
+        if not movies:
+            print("No movies saved.")
+            continue
+
+        idx = input_int("Movie number: ") - 1
+        if 0 <= idx < len(movies):
+            m = movies[idx]
+            print(f"Name: {m['name']}")
+            print(f"Year: {m['year']}")
+            print(f"Duration: {m['duration']} minutes")
+            print("Genres:", ", ".join(m["genres"]))
+        else:
+            print("Invalid index number")
+
+    # DELETE
+    elif choice == "d":
+        if not movies:
+            print("No movies saved.")
+            continue
+
+        idx = input_int("Movie number: ") - 1
+        if 0 <= idx < len(movies):
+            removed = movies.pop(idx)
+            print(f"Deleted {removed['name']}!")
+        else:
+            print("Invalid index number")
+
+    # QUIT
+    elif choice == "q":
+        print("Goodbye!")
+        break
+
+    else:
+        print("Invalid choice")
+
+
+
+def
