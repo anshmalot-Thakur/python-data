@@ -1,0 +1,118 @@
+# --- QUIZ DATA ---
+quiz = []   # each item = {"question": "", "options": [], "answer": 0}
+
+# --- helper input functions ---
+def input_something(prompt):
+    while True:
+        s = input(prompt).strip()
+        if s:
+            return s
+        print("Input cannot be empty.")
+
+def input_int(prompt):
+    while True:
+        try:
+            n = int(input(prompt))
+            return n
+        except:
+            print("Please enter a valid number.")
+
+
+# --- MAIN MENU LOOP ---
+print("Welcome to the Quiz Admin!")
+
+while True:
+    print("\nChoose:")
+    print("[a] Add question")
+    print("[p] Play quiz")
+    print("[u] Update question")
+    print("[d] Delete question")
+    print("[q] Quit")
+
+    choice = input("Enter choice: ").lower()
+
+    # ---------------- ADD QUESTION ----------------
+    if choice == "a":
+        q = input_something("Enter question: ")
+
+        options = []
+        for i in range(4):
+            opt = input_something(f"Option {i+1}: ")
+            options.append(opt)
+
+        ans = input_int("Correct option number (1-4): ")
+
+        quiz.append({"question": q, "options": options, "answer": ans})
+        print("Question added!")
+
+    # ---------------- PLAY QUIZ ----------------
+    elif choice == "p":
+        if not quiz:
+            print("No questions available!")
+            continue
+
+        score = 0
+        for i, q in enumerate(quiz, 1):
+            print(f"\nQ{i}. {q['question']}")
+            for j, opt in enumerate(q["options"], 1):
+                print(f"   {j}) {opt}")
+
+            user_ans = input_int("Your answer: ")
+
+            if user_ans == q["answer"]:
+                print("Correct!")
+                score += 1
+            else: 
+             print("Wrong.")
+    
+        print(f"\nYour score: {score}/{len(quiz)}")
+
+    # ---------------- UPDATE QUESTION ----------------
+    elif choice == "u":
+        if not quiz:
+            print("No questions to update.")
+            continue
+
+        idx = input_int("Enter question number to update: ") - 1
+
+        if 0 <= idx < len(quiz):
+            print("Leave blank to keep old value.")
+
+            new_q = input(f"New question (old: {quiz[idx]['question']}): ").strip()
+            if new_q:
+                quiz[idx]['question'] = new_q
+
+            for i in range(4):
+                new_opt = input(f"New option {i+1} (old: {quiz[idx]['options'][i]}): ").strip()
+                if new_opt:
+                    quiz[idx]['options'][i] = new_opt
+
+            new_ans = input("New correct answer (1-4) or Enter to skip: ").strip()
+            if new_ans:
+                quiz[idx]["answer"] = int(new_ans)
+
+            print("Question updated!")
+        else:
+            print("Invalid index.")
+
+    # ---------------- DELETE QUESTION ----------------
+    elif choice == "d":
+        if not quiz:
+            print("No questions to delete.")
+            continue
+
+        idx = input_int("Enter question number to delete: ") - 1
+
+        if 0 <= idx < len(quiz):
+            removed = quiz.pop(idx)
+            print(f"Deleted question: {removed['question']}")
+        else:
+            print("Invalid index.")
+
+    # ---------------- QUIT ----------------
+    elif choice == "q":
+        print("Goodbye!")
+        break
+
+    else:
+        print("Invalid choice.")
